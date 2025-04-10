@@ -28,7 +28,7 @@ export default function Terminal(screenTextEngine: {
   textarea.readOnly = true;
   textarea.blur();
   screenTextEngine.placeMarkdown(titleText);
-  screenTextEngine.placeText("user:~$");
+  screenTextEngine.placeText("ed@edh:~$"); // Update terminal prompt to match edh.dev
 
   const bash = Bash((s, md = false) => {
     if (md) {
@@ -84,7 +84,6 @@ export default function Terminal(screenTextEngine: {
       }
       textarea.setSelectionRange(lastSelection, lastSelection);
     }
-    // textarea
     if (e.key === "Enter") {
       screenTextEngine.freezeInput();
       bash.input(textarea.value);

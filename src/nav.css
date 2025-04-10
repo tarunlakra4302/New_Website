@@ -2,7 +2,7 @@ nav {
   position: fixed;
   top: 0px;
   left: 0px;
-  background-color: var(--background);
+  background-color: antiquewhite;
   width: 0px;
   z-index: 5;
 }
@@ -26,7 +26,7 @@ nav .btn {
   opacity: 0;
   pointer-events: none;
   padding: 8px 16px;
-  fill: var(--background);
+  fill: #f6d4b1;
 }
 
 .menu-btn > .btn:first-child {
@@ -44,26 +44,26 @@ html[data-scroll="true"] nav .btn {
 }
 
 .active .btn {
-  box-shadow: 6px 6px 0px rgba(243, 212, 179, 0.7);
-  background-color: var(--background);
-  color: var(--color);
-  fill: var(--color);
-  border-color: var(--color);
+  box-shadow: 6px 6px 0px rgba(246, 212, 177, 0.7);
+  background-color: #f6d4b1;
+  color: #525252;
+  fill: #525252;
+  border-color: #525252;
   opacity: 1 !important;
   pointer-events: all !important;
 }
 
 .active .btn:hover {
-  box-shadow: 8px 8px 6px rgba(243, 212, 179, 0.5);
+  box-shadow: 8px 8px 6px rgba(246, 212, 177, 0.5);
 }
 
 .active .btn:active {
-  box-shadow: 4px 4px 0px rgba(243, 212, 179, 0.7);
+  box-shadow: 4px 4px 0px rgba(246, 212, 177, 0.7);
 }
 
 .menu-body {
-  background-color: var(--color);
-  color: var(--background);
+  background-color: #525252;
+  color: #f6d4b1;
   font-size: 2em;
   font-family: "public-pixel", monospace;
   text-decoration: none !important;
@@ -106,11 +106,11 @@ html[data-scroll="true"] nav .btn {
   font-family: "chill", sans-serif;
   font-size: 14px;
   box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.75);
-  background-color: var(--color);
-  color: var(--background);
+  background-color: #525252;
+  color: #f6d4b1;
   transition: all 0.3s;
   padding: 4px 24px;
-  border: var(--background) solid 1px;
+  border: #f6d4b1 solid 1px;
   pointer-events: none;
   display: none;
   opacity: 1;

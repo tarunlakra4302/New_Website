@@ -5,8 +5,15 @@ import { Assists } from "../loader";
 import { Change } from "../../terminal";
 import { mergeBufferGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-const textColor = "#f99021";
+// Exact text color from edh.dev
+const textColor = "#2f2929";
+// Highlighting color from edh.dev
+const highlightColor = "#50b7a1";
 
+// Define screenWidth constant
+const screenWidth = 1.0; // Standard width for text rendering area
+
+// Update font sizes and spacing to match edh.dev
 type FontInfo = {
   font: undefined | Font;
   size: number;
@@ -17,7 +24,7 @@ type FontInfo = {
 };
 
 const h1Font: FontInfo = (function () {
-  let size = 0.05;
+  let size = 0.06; // Slightly larger like edh.dev
   let height = size;
   let width = size;
   let leading = height * 2;
@@ -26,7 +33,7 @@ const h1Font: FontInfo = (function () {
 })();
 
 const h2Font: FontInfo = (function () {
-  const size = 0.04;
+  const size = 0.042; // Adjusted to match edh.dev
   const height = size;
   const width = size * 0.8;
   const leading = height * 2;
@@ -35,7 +42,7 @@ const h2Font: FontInfo = (function () {
 })();
 
 const h3Font: FontInfo = (function () {
-  const size = 0.03;
+  const size = 0.032; // Adjusted to match edh.dev
   const height = size;
   const width = size * 0.8;
   const leading = height * 2.5;
@@ -43,12 +50,8 @@ const h3Font: FontInfo = (function () {
   return { font: undefined, size, height, width, leading, tracking };
 })();
 
-// Define screenWidth as a constant with the proper value
-const resolution = 512 + 64;
-const screenWidth = resolution * 1.33;
-
 const paragraphFont: FontInfo = (function () {
-  const size = 0.0275;
+  const size = 0.028; // Adjusted to match edh.dev
   const height = size;
   const width = size * 0.8;
   const leading = height * 2.5;
@@ -78,6 +81,7 @@ export default function ScreenTextEngine(
   sceneRTT.add(rootGroup);
 
   const textMaterial = new THREE.MeshBasicMaterial({ color: textColor });
+  const highlightMaterial = new THREE.MeshBasicMaterial({ color: highlightColor });
 
   const textColorMesh = new THREE.Mesh(
     new TextGeometry("", {
@@ -99,19 +103,20 @@ export default function ScreenTextEngine(
       curveSegments: 12,
       bevelEnabled: false,
     }),
-    new THREE.MeshBasicMaterial({ color: 0x000000 })
+    highlightMaterial // Use highlight color for emphasis
   );
   rootGroup.add(textBlackMesh);
 
   const textBgMesh = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(0, 0),
-    new THREE.MeshBasicMaterial({ color: textColor })
+    new THREE.PlaneGeometry(0, 0),
+    highlightMaterial // Use highlight color for background
   );
   rootGroup.add(textBgMesh);
 
+  // Match edh.dev's caret styling
   const caret = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(h2Font.size, h2Font.size * 1.6),
-    textMaterial
+    new THREE.PlaneGeometry(h2Font.size * 0.1, h2Font.size * 1.5),
+    highlightMaterial // Use highlight color for caret like on edh.dev
   );
   caret.position.z = -0.1;
   rootGroup.add(caret);
@@ -120,7 +125,7 @@ export default function ScreenTextEngine(
   function updateCharUnderCaret(isBlack: boolean) {
     if (charUnderCaret)
       (charUnderCaret.material as THREE.MeshBasicMaterial).color =
-        new THREE.Color(isBlack ? "black" : textColor);
+        new THREE.Color(isBlack ? highlightColor : textColor);
   }
 
   let caretTimeSinceUpdate = 1;
@@ -180,7 +185,7 @@ export default function ScreenTextEngine(
   }): {
     colorText: undefined | TextGeometry;
     blackText: undefined | TextGeometry;
-    bg: undefined | THREE.PlaneBufferGeometry;
+    bg: undefined | THREE.PlaneGeometry;
   } {
     props.wrap = props.wrap !== undefined ? props.wrap : false;
     props.isWord = props.isWord !== undefined ? props.isWord : false;
@@ -203,7 +208,7 @@ export default function ScreenTextEngine(
     const returnObj: {
       colorText: undefined | TextGeometry;
       blackText: undefined | TextGeometry;
-      bg: undefined | THREE.PlaneBufferGeometry;
+      bg: undefined | THREE.PlaneGeometry;
     } = {
       colorText: undefined,
       blackText: undefined,
@@ -223,7 +228,7 @@ export default function ScreenTextEngine(
     else textGeometry.translate(0, -props.font.height, -0.001);
 
     if (props.highlight) {
-      const background = new THREE.PlaneBufferGeometry(
+      const background = new THREE.PlaneGeometry(
         strLen + props.font.tracking * 2,
         props.font.height + props.font.leading / 2,
         1,
@@ -676,7 +681,7 @@ export default function ScreenTextEngine(
     const height = width / aspectRatio;
 
     const imageFrame = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(width, height, 1, 1),
+      new THREE.PlaneGeometry(width, height, 1, 1),
       new THREE.MeshBasicMaterial({ color: 0x000000 })
     );
 
@@ -692,15 +697,15 @@ export default function ScreenTextEngine(
   }
 
   function tick(deltaTime: number, elapsedTime: number) {
-    if (caretTimeSinceUpdate > 1 && Math.floor(elapsedTime * 2) % 2 == 0) {
+    // Match edh.dev's caret blink rate (faster)
+    caretTimeSinceUpdate += deltaTime;
+    if (caretTimeSinceUpdate > 0.8 && Math.floor(elapsedTime * 3) % 2 == 0) {
       caret.visible = false;
       updateCharUnderCaret(false);
     } else {
       caret.visible = true;
       updateCharUnderCaret(true);
     }
-
-    caretTimeSinceUpdate += deltaTime;
   }
 
   return {

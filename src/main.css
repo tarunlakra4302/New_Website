@@ -2,8 +2,7 @@
 @import url("./nav.css");
 
 :root {
-  --color: #2f2929;
-  --background: #f3d4b3;
+  --color: #525252;
 }
 
 @font-face {
@@ -23,7 +22,7 @@
 html,
 body {
   overflow-x: hidden;
-  background-color: var(--background);
+  background-color: #f6d4b1;
   font-family: "chill", sans-serif;
   font-size: 18px;
   -webkit-text-size-adjust: 100%;
@@ -80,7 +79,7 @@ body {
 }
 
 #loading {
-  color: var(--background);
+  color: #f6d4b1;
   background-color: var(--color);
   position: fixed;
   top: 0;
@@ -110,8 +109,8 @@ body {
   position: relative;
   width: 100%;
   height: 64px;
-  border: dashed 2px var(--background);
-  box-shadow: 2px 2px 0px var(--color), 6px 6px 0px rgba(243, 212, 179, 0.7);
+  border: dashed 2px #f6d4b1;
+  box-shadow: 2px 2px 0px var(--color), 6px 6px 0px rgba(246, 212, 177, 0.7);
 }
 
 #loading-bar-progress {
@@ -120,7 +119,7 @@ body {
   bottom: 2px;
   left: 2px;
   right: 2px;
-  background-color: var(--background);
+  background-color: #f6d4b1;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.2s;
@@ -128,7 +127,7 @@ body {
 
 h1 {
   display: inline-block;
-  color: var(--background);
+  color: #f6d4b1;
   background-color: var(--color);
   font-family: "public-pixel", monospace;
   font-size: 2em;
@@ -144,7 +143,7 @@ h2 {
   display: inline-block;
   font-size: 1.2em;
   text-align: center;
-  color: var(--background);
+  color: #f6d4b1;
   background-color: var(--color);
   font-family: "public-pixel", monospace;
   padding: 16px;
@@ -204,7 +203,7 @@ p {
   display: inline-block;
   padding: 4px 8px;
   border: dashed 1px var(--color);
-  box-shadow: 1px 1px 0px var(--background), 4px 4px 0px rgba(47, 41, 41, 0.25);
+  box-shadow: 1px 1px 0px #f6d4b1, 4px 4px 0px rgba(82, 82, 82, 0.25);
 }
 
 .image {
@@ -219,7 +218,8 @@ p {
 .image * {
   box-sizing: border-box;
   width: clamp(0px, 95vw, 1200px);
-  box-shadow: 1px 1px 0px var(--background), 6px 6px 0px rgba(47, 41, 41, 0.25);
+
+  box-shadow: 1px 1px 0px #f6d4b1, 6px 6px 0px rgba(82, 82, 82, 0.25);
 }
 
 main {
@@ -273,12 +273,12 @@ a {
 }
 a:hover {
   transform: scale(1.1);
-  box-shadow: 1px 1px 0px var(--background), 4px 4px 0px rgba(47, 41, 41, 0.25);
+  box-shadow: 1px 1px 0px #f6d4b1, 4px 4px 0px rgba(82, 82, 82, 0.25);
 }
 
 a:active {
   transform: scale(1);
-  box-shadow: 1px 1px 0px var(--background), 3px 3px 0px rgba(47, 41, 41, 0.4);
+  box-shadow: 1px 1px 0px #f6d4b1, 3px 3px 0px rgba(82, 82, 82, 0.4);
 }
 
 .btn {
@@ -287,32 +287,63 @@ a:active {
   font-size: 18px;
   display: inline-flex;
   gap: 0.25rem;
-  box-shadow: 6px 6px 0px rgba(47, 41, 41, 0.25);
+  box-shadow: 6px 6px 0px rgba(82, 82, 82, 0.25);
   background-color: var(--color);
-  color: var(--background);
+  color: #f6d4b1;
   cursor: pointer;
   transition: all 0.3s;
   padding: 4px 24px;
-  border: var(--background) solid 1px;
+  border: #f6d4b1 solid 1px;
   text-decoration: none;
 }
 
 .btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 6px 10px 0px rgba(47, 41, 41, 0.25);
+  transform: scale(1.1);
+  box-shadow: 8px 8px 6px rgba(82, 82, 82, 0.25);
+  z-index: 2;
 }
 
 .btn:active {
-  transform: translateY(-2px);
-  box-shadow: 6px 8px 0px rgba(47, 41, 41, 0.25);
+  transform: scale(0.95);
+  box-shadow: 4px 4px 0px rgba(82, 82, 82, 0.4);
 }
 
-iframe {
-  border: none;
+.portrait {
+  position: relative;
+  width: clamp(0px, 95vw, 780px);
+  padding: 0;
+  height: 400px;
+  margin: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 1px 1px 0px #f6d4b1, 6px 6px 0px rgba(82, 82, 82, 0.25);
 }
 
-@media screen and (max-width: 600px) {
-  main {
-    margin-top: 100vh;
-  }
+.portrait-tag {
+  position: absolute;
+  color: white;
+  left: calc(50% + 120px);
+  top: 30px;
+  transform: translateX(-50%) rotate(20deg);
+}
+
+.portrait::after {
+  z-index: -1;
+  position: absolute;
+  top: -30px;
+  bottom: -30px;
+  left: -30px;
+  right: -30px;
+  display: block;
+  content: " ";
+  box-shadow: 6px 6px 0px rgba(82, 82, 82, 0.25);
+  background-color: #040d21;
+  background-image: url(img/bg.png);
+  background-size: contain;
+  filter: blur(30px);
+  color: #f6d4b1;
+  border: #f6d4b1 solid 1px;
 }

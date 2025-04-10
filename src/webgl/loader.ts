@@ -18,7 +18,6 @@ type Assists = {
 
 function loadAssists(callback: (assists: Assists) => any) {
   const assists: any = {};
-  let loadingErrors = 0;
 
   const loadingDOM = document.querySelector("#loading");
   const loadingItemsDOM = document.querySelector("#loading-items");
@@ -69,112 +68,78 @@ function loadAssists(callback: (assists: Assists) => any) {
     );
   };
 
-  manager.onError = function(url) {
-    console.error('Error loading asset:', url);
-    loadingErrors++;
-    if (loadingItemsDOM) {
-      loadingItemsDOM.textContent = `Error loading: ${url}`;
-    }
-  };
-
   // Fonts
   const fontLoader = new FontLoader(manager);
-  fontLoader.load("./fonts/public-pixel.json", (font) => {
+  fontLoader.load("/fonts/public-pixel.json", (font) => {
     assists.publicPixelFont = font;
-  },
-  undefined,
-  (error) => {
-    console.error('Error loading public-pixel font:', error);
-    // Fallback to create a basic font
-    assists.publicPixelFont = new Font({});
   });
-
-  fontLoader.load("./fonts/chill.json", (font) => {
+  fontLoader.load("/fonts/chill.json", (font) => {
     assists.chillFont = font;
-  },
-  undefined,
-  (error) => {
-    console.error('Error loading chill font:', error);
-    // Fallback to create a basic font
-    assists.chillFont = new Font({});
   });
 
-  // Texture loader
+  // Texture loading - match edh.dev's settings exactly
   const textureLoader = new THREE.TextureLoader(manager);
-  textureLoader.load("./textures/bake-quality-5.jpg", (tex) => {
+  textureLoader.load("/textures/bake-quality-5.jpg", (tex) => {
     tex.flipY = false;
     tex.encoding = THREE.sRGBEncoding;
+    tex.anisotropy = 4; // Add anisotropic filtering like edh.dev
     assists.bakeTexture = tex;
-  },
-  undefined,
-  (error) => {
-    console.error('Error loading bake texture:', error);
-    // Fallback texture
-    assists.bakeTexture = new THREE.Texture();
   });
 
-  textureLoader.load("./textures/bake_floor-quality-3.jpg", (tex) => {
+  textureLoader.load("/textures/bake_floor-quality-3.jpg", (tex) => {
     tex.flipY = false;
     tex.encoding = THREE.sRGBEncoding;
+    tex.anisotropy = 4; // Add anisotropic filtering like edh.dev
     assists.bakeFloorTexture = tex;
-  },
-  undefined,
-  (error) => {
-    console.error('Error loading floor texture:', error);
-    // Fallback texture
-    assists.bakeFloorTexture = new THREE.Texture();
   });
 
   const cubeTextureLoader = new THREE.CubeTextureLoader(manager);
 
   cubeTextureLoader.load(
     [
-      "./textures/environmentMap/px.jpg",
-      "./textures/environmentMap/nx.jpg",
-      "./textures/environmentMap/py.jpg",
-      "./textures/environmentMap/ny.jpg",
-      "./textures/environmentMap/pz.jpg",
-      "./textures/environmentMap/nz.jpg",
+      `/textures/environmentMap/px.jpg`,
+      `/textures/environmentMap/nx.jpg`,
+      `/textures/environmentMap/py.jpg`,
+      `/textures/environmentMap/ny.jpg`,
+      `/textures/environmentMap/pz.jpg`,
+      `/textures/environmentMap/nz.jpg`,
     ],
     (tex) => {
+      tex.encoding = THREE.sRGBEncoding; // Set correct encoding for env map
       assists.environmentMapTexture = tex;
-    },
-    undefined,
-    (error) => {
-      console.error('Error loading environment map:', error);
-      // Create a default environment map
-      assists.environmentMapTexture = new THREE.CubeTexture();
     }
   );
 
   // Mesh
   const gltfLoader = new GLTFLoader(manager);
-  gltfLoader.load("./models/Commodore710_33.5.glb", (gltf) => {
-    assists.screenMesh = gltf.scene.children.find((m) => m.name === "Screen");
-    assists.computerMesh = gltf.scene.children.find(
-      (m) => m.name === "Computer"
-    );
-    assists.crtMesh = gltf.scene.children.find((m) => m.name === "CRT");
-    assists.keyboardMesh = gltf.scene.children.find(
-      (m) => m.name === "Keyboard"
-    );
-    assists.shadowPlaneMesh = gltf.scene.children.find(
-      (m) => m.name === "ShadowPlane"
-    );
-  },
-  (progress) => {
-    // Progress callback
-    console.log(`Model loading: ${Math.round(progress.loaded / progress.total * 100)}%`);
-  },
-  (error) => {
-    console.error('Error loading 3D model:', error);
-    // Create fallback meshes
-    assists.screenMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
-    assists.computerMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
-    assists.crtMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
-    assists.keyboardMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
-    assists.shadowPlaneMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1));
-  });
+  gltfLoader.load(
+    "/models/Commodore710_33.5.glb",
+    (gltf) => {
+      assists.screenMesh = gltf.scene.children.find((m) => m.name === "Screen");
+      assists.computerMesh = gltf.scene.children.find(
+        (m) => m.name === "Computer"
+      );
+      assists.crtMesh = gltf.scene.children.find((m) => m.name === "CRT");
+      assists.keyboardMesh = gltf.scene.children.find(
+        (m) => m.name === "Keyboard"
+      );
+      assists.shadowPlaneMesh = gltf.scene.children.find(
+        (m) => m.name === "ShadowPlane"
+      );
+
+      // Log successful loading
+      console.log("3D model loaded successfully");
+    },
+    (progress) => {
+      // Log loading progress for large models
+      if (progress.total > 0) {
+        console.log(`Loading 3D model: ${Math.round((progress.loaded / progress.total) * 100)}%`);
+      }
+    },
+    (error) => {
+      console.error("Error loading 3D model:", error);
+    }
+  );
 }
 
 export { loadAssists };
